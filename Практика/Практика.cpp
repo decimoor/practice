@@ -2,11 +2,14 @@
 #include <string>
 #include <clocale>
 #include <cmath>
+#include <cstdlib>
+#include <Windows.h>
 #define Rus setlocale(LC_ALL, "Rus")
 
 using namespace std;
 void make_arr(long long key, int arr[]);
 int	number_size(long long key);
+char letter(char l, int k);
 string cypher(string sentence, long long key)
 {
 	int arr[100];
@@ -25,6 +28,9 @@ int main()
 	cin >> key;
 	string new_one = cypher(sentence, key);
 	cout << "Зашифрованное предложение: " << new_one;
+	Rus;
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	
 	
 
@@ -52,4 +58,20 @@ int number_size(long long key)
 		size++;
 	}
 	return size+1;
+}
+
+char letter(char l, int k)
+{
+	int place = 0;
+	if (l >= -64 && l <= -33)
+	{
+		place = (l +64 + k) % 32;
+		l = -64 + place;
+	}
+	if (l >= -32 && l <= -1)
+	{
+		place = (l + 32 + k) % 32;
+		l = -32 + place;
+	}
+	return l;
 }

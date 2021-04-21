@@ -2,7 +2,6 @@
 #include <string>
 #include <clocale>
 #include <cmath>
-#include <cstdlib>
 #include <Windows.h>
 #define Rus setlocale(LC_ALL, "Rus")
 
@@ -14,27 +13,29 @@ string cypher(string sentence, long long key)
 {
 	int arr[100];
 	make_arr(key, arr);
-	string new_sentence;
+	string new_sentence = sentence;
+	int size = number_size(key);
+	for (int i = 0; i < sentence.size(); i++)
+	{
+		new_sentence[i] = letter(sentence[i], arr[i % size]);
+	}
 	return new_sentence;
 }
 
 int main()
 {
+	Rus;
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	cout << "Введите предложение: ";
 	string sentence;
-	cin >> sentence;
+	getline(cin, sentence);
 	cout << "Введите ключ: ";
 	long long key;
 	cin >> key;
 	string new_one = cypher(sentence, key);
 	cout << "Зашифрованное предложение: " << new_one;
-	Rus;
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
 	
-	
-
-
 }
 
 void make_arr(long long key, int arr[])

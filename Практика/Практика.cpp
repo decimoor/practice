@@ -10,7 +10,10 @@ using namespace std;
 void make_arr(long long key, int arr[]); //тут мы создаем массив из цифр ключа то есть если ключ 123456, то массив: [1,2,3,4,5,6]
 int	number_size(long long key); //тут у нас размер ключа (количество цифр)
 char letter(char l, int k); //функция, которая меняет букву по ключу, то есть A и ключ 2 получится В
+char letter_backward(char l, int k);
 string cypher(string sentence, long long key); //функция которая все это объединяет
+string uncypher(string sentence, long long key); //расшифровывает сообщение
+
 
 
 int main()
@@ -25,9 +28,12 @@ int main()
 	long long key;
 	cin >> key;
 	string new_one = cypher(sentence, key);
-	cout << "Зашифрованное предложение: " << new_one;
+	cout << "Зашифрованное предложение: " << new_one << endl;
+	string old_one = uncypher(new_one, key);
+	cout << "Расшифрованное предложение: " << old_one << endl;
 	//ну типо все
 	//внизу реализцаия некоторых функций, но там ничего интересного
+
 }
 
 void make_arr(long long key, int arr[])
@@ -70,6 +76,31 @@ char letter(char l, int k)
 	return l;
 }
 
+char letter_backward(char l, int k)
+{
+	int place = 0;
+	if (l >= -64 && l <= -33)
+	{
+		place = (l + 64 - k);
+		if (place < 0)
+
+		{
+			place = 32 + place;
+		}
+		
+		l = -64 + place;
+	}
+	if (l >= -32 && l <= -1)
+	{
+		place = (l + 32 - k);
+		if (place < 0)
+		{
+			place = 32 + place;
+		}
+		l = -32 + place;
+	}
+	return l;
+}
 string cypher(string sentence, long long key) //функция которая все это объединяет
 {
 	int arr[100]; //массив с цифрами ключа
@@ -81,4 +112,18 @@ string cypher(string sentence, long long key) //функция которая в
 		new_sentence[i] = letter(sentence[i], arr[i % size]); //шифруем каждую букву по отдельности
 	}
 	return new_sentence;
+}
+
+string uncypher(string sentence, long long key)
+{
+	int size = number_size(key);
+	int arr[100];
+	make_arr(key, arr);
+	string old_one = sentence;
+	for (int i = 0; i < sentence.size(); i++)
+	{
+		old_one[i] = letter_backward(sentence[i], arr[i % size]);
+	}
+	return old_one;
+
 }

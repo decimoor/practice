@@ -6,10 +6,7 @@
 
 using namespace std;
 void make_arr(long long key, int arr[]);
-int	number_size(long long key)
-{
-
-}
+int	number_size(long long key);
 string cypher(string sentence, long long key)
 {
 	int arr[100];
@@ -29,6 +26,7 @@ int main()
 	string new_one = cypher(sentence, key);
 	cout << "Зашифрованное предложение: " << new_one;
 	
+	
 
 
 }
@@ -44,4 +42,14 @@ void make_arr(long long key, int arr[])
 		exp /= 10;
 	}
 
+}
+int number_size(long long key)
+{
+	int size = 0;
+	while (key >= 10)
+	{
+		key /= 10;
+		size++;
+	}
+	return size+1;
 }

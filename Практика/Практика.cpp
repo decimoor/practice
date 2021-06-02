@@ -1,39 +1,54 @@
 ﻿#include <iostream>
+#include <fstream>
 #include <string> //для string'а
 #include <clocale> //для великого и могучего
 #include <cmath> //для возведения в степень
 #include <Windows.h> //тоже для великого и могучего
-#define Rus setlocale(LC_ALL, "Rus")
+#include <ctime>
+
 
 using namespace std;
+
+ifstream file("pswrds.txt");
 
 void make_arr(long long key, int arr[]); //тут мы создаем массив из цифр ключа то есть если ключ 123456, то массив: [1,2,3,4,5,6]
 int	number_size(long long key); //тут у нас размер ключа (количество цифр)
 char letter(char l, int k); //функция, которая меняет букву по ключу, то есть A и ключ 2 получится В
 char letter_backward(char l, int k);
-string cypher(string sentence, long long key); //функция которая все это объединяет
-string uncypher(string sentence, long long key); //расшифровывает сообщение
+string crypt(string sentence, long long key); //функция которая все это объединяет
+string uncrypt(string sentence, long long key); //расшифровывает сообщение
+void load(string title);
+bool checking(string password);
 
 
 
 int main()
 {
-	Rus;
+	setlocale(LC_ALL, "Rus");
+	setlocale(0, "Rus");
 	SetConsoleCP(1251); //дичь, чтобы буквы адекватно выводились
 	SetConsoleOutputCP(1251);
-	cout << "Введите предложение: ";
+	cout << "Введите пароль: ";
 	string sentence;
 	getline(cin, sentence); //считываем строку целиком (cin так не может)
-	cout << "Введите ключ: ";
 	long long key;
-	cin >> key;
-	string new_one = cypher(sentence, key);
-	cout << "Зашифрованное предложение: " << new_one << endl;
-	string old_one = uncypher(new_one, key);
-	cout << "Расшифрованное предложение: " << old_one << endl;
-	//ну типо все
-	//внизу реализцаия некоторых функций, но там ничего интересного
-
+	srand(time(0));
+	key = rand();
+	string new_one = crypt(sentence, key);
+	load("Шифруем пароль: ");
+	cout << "\nПароль успешно зашифрован";
+	load("Передача пароля на сервер: ");
+	cout << "\nПередача завершена!";
+	string old_one = uncrypt(new_one, key);
+	load("Сервер: расшифровка сообщения: ");
+	if (checking(old_one))
+	{
+		cout << "\nВы успешно авторизованы!";
+	}
+	else
+	{
+		cout << "\nПароль неверный!";
+	}
 }
 
 void make_arr(long long key, int arr[])
@@ -57,7 +72,7 @@ int number_size(long long key)
 		key /= 10;
 		size++;
 	}
-	return size+1;
+	return ++size;
 }
 
 char letter(char l, int k)
@@ -101,7 +116,7 @@ char letter_backward(char l, int k)
 	}
 	return l;
 }
-string cypher(string sentence, long long key) //функция которая все это объединяет
+string crypt(string sentence, long long key) //функция которая все это объединяет
 {
 	int arr[100]; //массив с цифрами ключа
 	make_arr(key, arr);
@@ -114,7 +129,7 @@ string cypher(string sentence, long long key) //функция которая в
 	return new_sentence;
 }
 
-string uncypher(string sentence, long long key)
+string uncrypt(string sentence, long long key)
 {
 	int size = number_size(key);
 	int arr[100];
@@ -126,4 +141,29 @@ string uncypher(string sentence, long long key)
 	}
 	return old_one;
 
+}
+void load(string title)
+{
+	string line = title + " [ ";
+	for (int i = 0; i < 30; i++)
+	{
+		line += "#";
+		Sleep(rand()%300);
+		cout << "\r" << line;
+	}
+	cout << "\r" << line + " ]";
+}
+
+bool checking(string password)
+{
+	string ps;
+	while (!file.eof())
+	{
+		getline(file, ps, '\n');
+		if (ps == password)
+		{
+			return true;
+		}
+	}
+	return false;
 }
